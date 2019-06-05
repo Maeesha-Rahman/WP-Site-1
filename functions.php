@@ -21,7 +21,10 @@
     function university_features() {
         // set up unique title for each page (title tag in head)
         add_theme_support('title-tag');
+        // first argument can be named anything, 2nd argument is any human friendly name you want (text that will show up in wp admin screen), 
+        // register_nav_menu('headerMenuLocation', 'Header Menu Location');
     };
 
     add_action('after_setup_theme', 'university_features');
+
 ?>

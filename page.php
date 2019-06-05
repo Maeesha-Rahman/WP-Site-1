@@ -38,14 +38,41 @@
     ?>
 
    
+    <?php 
+    // get_pages() is identical to wp_list_pages function but it returns pages in memory instead of echoing 
+    // if current page has children the function get_pages will return a collection of children pages 
+    // if current page does not have children, it will return NULL
+    $testArray = get_pages(array(
+      'child_of' => get_the_ID(),
+    ));
     
-    <!-- <div class="page-links">
-      <h2 class="page-links__title"><a href="#">About Us</a></h2>
+    // $theParent - is a child page
+    // testArray will only run if page has children
+    // thus the code will only run if a page is either a child or a parent
+    if ($theParent or $testArray) { ?>
+    <div class="page-links">
+      <h2 class="page-links__title"><a href="<?php echo get_permalink($theParent); ?>"><?php echo get_the_title($theParent); ?></a></h2>
       <ul class="min-list">
-        <li class="current_page_item"><a href="#">Our History</a></li>
-        <li><a href="#">Our Goals</a></li>
+        <?php 
+        // only if current page has a parent (not a value of 0)
+          if ($theParent) {
+            // get id of child page
+            $findChildrenOf = $theParent;
+          } else {
+            // get the ID since it is parent page
+            $findChildrenOf = get_the_ID();
+          }
+
+          wp_list_pages(array(
+            // to get rid of "pages" text
+            'title_li' => NULL,
+            'child_of' => $findChildrenOf,
+            'sort_column' => 'menu_order',
+          ));
+        ?>
       </ul>
-    </div> -->
+    </div>
+    <?php } ?>
 
     <div class="generic-content">
       <?php the_content(); ?>
