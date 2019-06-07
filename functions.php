@@ -27,4 +27,32 @@
 
     add_action('after_setup_theme', 'university_features');
 
+    function university_adjust_queries($query) {
+        if (!is_admin() && is_post_type_archive('program') && $query -> is_main_query()) {
+            $query -> set('orderby', 'title');
+            $query -> set('order', 'ASC');
+            // to show all posts at once, use -1
+            $query -> set('posts_per_page', -1);
+        }
+        // if we are not on admin page and the post type is an event, then apply the following to the event post
+        // query is the post
+        if (!is_admin() && is_post_type_archive('event') && $query -> is_main_query()) {
+            $today = date('Ymd');
+            $query -> set('meta_key', 'event_date');
+            $query -> set('orderby', 'meta_value_num');
+            $query -> set('order', 'ASC');
+            $query -> set('meta_query', array(
+                array(
+                  // only render posts if the key (event_date) is greater than or equal to today's date 
+                  'key' => 'event_date',
+                  'compare' => '>=',
+                  'value' => $today,
+                  'type' => 'numeric'
+                )  
+              ));
+        }
+    };
+    // before you get the post, call the function to filter what post gets rendered
+    add_action('pre_get_posts', 'university_adjust_queries');
+
 ?>
