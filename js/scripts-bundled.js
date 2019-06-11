@@ -10569,6 +10569,7 @@
    function Search() {
      _classCallCheck(this, Search);
  
+     this.addSearchHTML();
      this.resultsDiv = (0, _jquery2.default)("#search-overlay__results");
      this.openButton = (0, _jquery2.default)(".js-search-trigger");
      this.closeButton = (0, _jquery2.default)(".search-overlay__close");
@@ -10606,7 +10607,7 @@
              this.resultsDiv.html('<div class="spinner-loader"></div>');
              this.isSpinnerVisible = true;
            }
-           this.typingTimer = setTimeout(this.getResults.bind(this), 2000);
+           this.typingTimer = setTimeout(this.getResults.bind(this), 750);
          } else {
            this.resultsDiv.html('');
            this.isSpinnerVisible = false;
@@ -10620,11 +10621,14 @@
      value: function getResults() {
        var _this = this;
  
-       _jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
-         _this.resultsDiv.html("\n        <h2 class=\"search-overlay__section-title\">General Information</h2>\n        " + (posts.length ? '<ul class="link-list min-list">' : '<p>No general information matches that search.</p>') + "\n          " + posts.map(function (item) {
-           return "<li><a href=\"" + item.link + "\">" + item.title.rendered + "</a></li>";
-         }).join('') + "\n        " + (posts.length ? '</ul>' : '') + "\n      ");
+       _jquery2.default.when(_jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val()), _jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())).then(function (posts, pages) {
+         var combinedResults = posts[0].concat(pages[0]);
+         _this.resultsDiv.html("\n        <h2 class=\"search-overlay__section-title\">General Information</h2>\n        " + (combinedResults.length ? '<ul class="link-list min-list">' : '<p>No general information matches that search.</p>') + "\n          " + combinedResults.map(function (item) {
+           return "<li><a href=\"" + item.link + "\">" + item.title.rendered + "</a> " + (item.type == 'post' ? "by " + item.authorName : '') + "</li>";
+         }).join('') + "\n        " + (combinedResults.length ? '</ul>' : '') + "\n      ");
          _this.isSpinnerVisible = false;
+       }, function () {
+         _this.resultsDiv.html('<p>Unexpected error; please try again.</p>');
        });
      }
    }, {
@@ -10641,8 +10645,14 @@
    }, {
      key: "openOverlay",
      value: function openOverlay() {
+       var _this2 = this;
+ 
        this.searchOverlay.addClass("search-overlay--active");
        (0, _jquery2.default)("body").addClass("body-no-scroll");
+       this.searchField.val('');
+       setTimeout(function () {
+         return _this2.searchField.focus();
+       }, 301);
        console.log("our open method just ran!");
        this.isOverlayOpen = true;
      }
@@ -10653,6 +10663,11 @@
        (0, _jquery2.default)("body").removeClass("body-no-scroll");
        console.log("our close method just ran!");
        this.isOverlayOpen = false;
+     }
+   }, {
+     key: "addSearchHTML",
+     value: function addSearchHTML() {
+       (0, _jquery2.default)("body").append("\n      <div class=\"search-overlay\">\n        <div class=\"search-overlay__top\">\n          <div class=\"container\">\n            <i class=\"fa fa-search search-overlay__icon\" aria-hidden=\"true\"></i>\n            <input type=\"text\" class=\"search-term\" placeholder=\"What are you looking for?\" id=\"search-term\">\n            <i class=\"fa fa-window-close search-overlay__close\" aria-hidden=\"true\"></i>\n          </div>\n        </div>\n        \n        <div class=\"container\">\n          <div id=\"search-overlay__results\"></div>\n        </div>\n\n      </div>\n    ");
      }
    }]);
  

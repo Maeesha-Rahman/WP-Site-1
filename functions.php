@@ -1,4 +1,13 @@
 <?php 
+
+    function university_custom_rest() {
+        register_rest_field('post', 'authorName', array(
+            'get_callback' => function() {return get_the_author();}
+        ));
+    };
+
+    add_action('rest_api_init', 'university_custom_rest');
+
     // $args = NULL will make the argument optional instead of required. so for when pageBanner is called, you have an option of passing in arguments or leaving it empty
     function pageBanner($args = NULL) {
         // only if the function is called and a title is not passed into it 
