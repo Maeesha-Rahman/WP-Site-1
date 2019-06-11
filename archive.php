@@ -1,11 +1,17 @@
 <?php 
 
-get_header(); ?> 
+get_header(); 
+pageBanner(array(
+  'title' => get_the_archive_title(),
+  'subtitle' => get_the_archive_description(),
+));
+?> 
 
-<div class="page-banner">
+<!-- duplicate code has now been turned to function pageBanner() -->
+<!-- <div class="page-banner">
     <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/ocean.jpg') ?>);"></div>
     <div class="page-banner__content container container--narrow">
-      <h1 class="page-banner__title">
+      <h1 class="page-banner__title"> -->
       <!-- can use longer method if you want text to be specific -->
         <!-- <?php 
             if(is_category()) {
@@ -18,12 +24,12 @@ get_header(); ?>
         <!-- OR -->
         <!-- this does the same thing and is easier -->
         <?php the_archive_title(); ?>
-      </h1>
+      <!-- </h1>
       <div class="page-banner__intro">
         <p><?php the_archive_description(); ?></p>
       </div>
     </div>  
-  </div>
+  </div>  -->
 
   <div class="container container--narrow page-section">
     <?php 

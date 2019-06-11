@@ -36,29 +36,10 @@
           ));
 
           while($homepageEvents -> have_posts()) {
-            $homepageEvents -> the_post(); ?>
-              <div class="event-summary">
-                <a class="event-summary__date t-center" href="#">
-                  <span class="event-summary__month"><?php  
-                  // create a variable containing an object that represents the future custom date
-                    $eventDate = new DateTime(get_field('event_date'));
-                    // look inside object and format to return 3 letter representation of the month
-                    echo $eventDate -> format('M')
-                  ?></span>
-                  <span class="event-summary__day"><?php echo $eventDate->format('d') ?></span>  
-                </a>
-                <div class="event-summary__content">
-                  <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h5>
-                  <p>
-                  <?php if (has_excerpt()) {
-                          echo get_the_excerpt();
-                        } else {
-                          echo wp_trim_words(get_the_content(), 18);
-                        } ?>
-                  <a href="#" class="nu gray">Learn more</a></p>
-                </div>
-              </div>
-            <?php }
+            $homepageEvents -> the_post(); 
+            // point to where it is located 
+              get_template_part('template-parts/content', 'event');
+            }
         ?> 
         
         <p class="t-center no-margin"><a href="<?php echo get_post_type_archive_link('event'); ?>" class="btn btn--blue">View All Events</a></p>
