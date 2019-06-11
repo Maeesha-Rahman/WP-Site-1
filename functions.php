@@ -96,7 +96,7 @@
 
     // plugin automatically have us $api array full of methods we can use
     function universityMapKey($api) {
-        $api['key'] = 'AIzaSyAYwsNIoxXgOLUk5n6ack0HQ-cMmu7W1Ww';
+        $api['key'] = '';
         return $api;
     };
 
